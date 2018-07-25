@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from "react-redux";
+import { fetch } from "./actions";
+
 import './App.css';
 
+let mapStateToProps = store => {
+  return store
+};
+
 class App extends Component {
+
+  loadData() {
+    this.props.dispatch(fetch());
+  }
+
   render() {
+    const store = this.props.measurements;
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <button onClick={this.loadData.bind(this)}>
+          Load random color from API
+        </button>
+        <p>{store}</p>
       </div>
     );
   }
 }
 
-export default App;
+export default connect(mapStateToProps)(App);
