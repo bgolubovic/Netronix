@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { fetch } from "./actions";
+import { changeData } from "./actions";
 
 import './App.css';
 
@@ -10,17 +10,22 @@ let mapStateToProps = store => {
 
 class App extends Component {
 
-  loadData() {
-    this.props.dispatch(fetch());
+  constructor(props) {
+    super(props);
+    
+    // connect to the realtime database stream
+    let API =  'https://jsdemo.envdev.io/sse';
+    let eventSource = new EventSource(API);
+
+    eventSource.onmessage = (e) => {
+      this.props.dispatch(changeData(e.data));
+    }
   }
 
   render() {
     const store = this.props.measurements;
     return (
       <div className="App">
-        <button onClick={this.loadData.bind(this)}>
-          Load random color from API
-        </button>
         <p>{store}</p>
       </div>
     );
